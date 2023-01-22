@@ -1,0 +1,30 @@
+[package]
+name = "sab"
+version = "0.1.0"
+edition = "2021"
+description = "A simple S3 backup tool"
+authors = ["Max Kuznetsov <syhpoon@syhpoon.ca>"]
+homepage = "https://github.com/syhpoon/sab"
+repository = "https://github.com/syhpoon/sab"
+license = "MIT"
+keywords = ["backup", "s3", "glacier"]
+categories = ["command-line-utilities"]
+readme = "README.md"
+
+[dependencies]
+aws-config = "0.53.0"
+aws-sdk-s3 = "0.23.0"
+tokio = { version = "1", features = ["full"] }
+clap = { version = "4.0.32", features = ["derive"]}
+anyhow = "1.0.68"
+serde_yaml = "0.9.16"
+serde = {version = "1.0.152", features = ["derive"]}
+expanduser = "1.2.2"
+humanize-rs = "0.1.5"
+log = "0.4.17"
+env_logger = "0.10.0"
+chrono = "0.4.23"
+sha2 = "0.10.6"
+hex = "0.4.3"
+flate2 = "1.0.25"
+orion = "0.17.3"
