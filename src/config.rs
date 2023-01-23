@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::fs;
-use std::io::Write;
-use std::path::{Path, PathBuf};
 use std::fs::OpenOptions;
+use std::io::Write;
 use std::os::unix::fs::OpenOptionsExt;
+use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use expanduser::expanduser;

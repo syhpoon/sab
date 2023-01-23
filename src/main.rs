@@ -1,22 +1,22 @@
 extern crate core;
 extern crate log;
 
-mod config;
-mod s3;
 mod cmd_download;
+mod cmd_gen_key;
 mod cmd_init;
 mod cmd_list;
 mod cmd_upload;
-mod cmd_gen_key;
+mod config;
+mod s3;
 
 use config::Config;
 use s3::S3Client;
 
 use cmd_download::cmd_download;
+use cmd_gen_key::cmd_gen_key;
 use cmd_init::cmd_init;
 use cmd_list::cmd_list;
 use cmd_upload::cmd_upload;
-use cmd_gen_key::cmd_gen_key;
 
 use aws_sdk_s3::model::StorageClass;
 use clap::{ArgAction, Parser, Subcommand};
