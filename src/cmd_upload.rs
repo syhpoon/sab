@@ -1,6 +1,9 @@
 use std::fs::File;
 use std::io::{Read, Write};
 use std::path::PathBuf;
+use std::fs;
+use std::os::unix::fs::MetadataExt;
+use std::process::exit;
 
 use crate::config::{Backup, Config, UploadPart};
 use crate::s3::S3Client;
@@ -12,6 +15,8 @@ use flate2::write::GzEncoder;
 use flate2::Compression;
 use orion::aead;
 use sha2::{Digest, Sha256};
+
+const MAX_CHUNKS: u64 = 10_000;
 
 pub async fn cmd_upload(
     cl: S3Client<'_>,
@@ -28,7 +33,17 @@ pub async fn cmd_upload(
     let backup_file = cfg.backup(file);
     let mut backup: Backup;
 
-    let name = PathBuf::from(file)
+    let input_file = PathBuf::from(file);
+    let md = input_file.metadata().expect("failed to get input file metadata");
+
+    let num_chunks = md.size() / chunk_size as u64;
+    if num_chunks > MAX_CHUNKS {
+        log::error!(
+            "the total number of chunks {} exceeds the maximum amount of {}, consider increasing the chunk size", num_chunks, MAX_CHUNKS);
+        exit(1);
+    }
+
+    let name = input_file
         .file_name()
         .unwrap()
         .to_string_lossy()
@@ -41,7 +56,8 @@ pub async fn cmd_upload(
     if backup_file.exists() {
         log::info!("loading existing configuration");
 
-        backup = Backup::load(backup_file.as_path()).expect("failed to load backup config");
+        backup = Backup::load(backup_file.as_path())
+            .expect("failed to load backup config");
     } else {
         log::info!("creating new configuration");
 

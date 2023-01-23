@@ -6,6 +6,7 @@
 * multiple profiles
 * encryption and compression
 * `STANDARD` and `DEEP_ARCHIVE` (Glacier) storage classes
+* ability to resume upload from the last uploaded chunk in case of a transient failure
 
 # Installation
 

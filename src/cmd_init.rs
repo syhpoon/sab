@@ -29,6 +29,9 @@ pub fn cmd_init(profile_name: &str) {
 
     cfg.set_profile(profile_name, profile);
     cfg.save().expect("failed to save profiles config");
+
+    log::info!("profile '{}' added to {}",
+        profile_name, Config::profiles_file().to_str().unwrap())
 }
 
 fn populate_profile(profile: &mut Profile) {

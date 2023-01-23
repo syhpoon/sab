@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 use std::fs;
+use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::fs::OpenOptions;
+use std::os::unix::fs::OpenOptionsExt;
 
 use anyhow::Result;
 use expanduser::expanduser;
@@ -116,8 +119,14 @@ impl Default for Config {
 }
 
 fn save<T: ?Sized + Serialize>(obj: &T, path: &Path) -> Result<()> {
+    let mut f = OpenOptions::new()
+        .create(true)
+        .write(true)
+        .mode(0o600)
+        .open(path)?;
+
     let data = serde_yaml::to_string(obj)?;
-    let _ = fs::write(path, data)?;
+    f.write_all(data.as_bytes())?;
 
     Ok(())
 }
